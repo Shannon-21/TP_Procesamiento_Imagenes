@@ -32,6 +32,7 @@ class Formulario:
             },
             comentario: np.ndarray
         }
+        Todos los arreglos de numpy son binarios, esto quiere decir que sólo poseen dos valores, 0 para negroy 255 para blanco
         """
         filas = []
         formulario = {}
