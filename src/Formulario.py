@@ -74,7 +74,7 @@ class Formulario:
             ---------------------------------------
             """
             for j, columna in enumerate(columnas_x):
-                img_col = fila_umbral[:, columna[0]:columna[1]] * 255
+                img_col = fila_umbral[:fila_umbral.shape[0]-1, columna[0]:columna[1]] * 255
                 if i == 0: continue
                 if i == 1:
                     if j == 1:
