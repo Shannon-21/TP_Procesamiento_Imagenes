@@ -2,6 +2,17 @@ import numpy as np
 class Formulario:
     
     img: np.ndarray
+    mapeo = {
+        "nombre": "Nombre y apellido",
+        "edad": "Edad",
+        "mail": "Mail",
+        "legajo": "Legajo",
+        "preg1": "Pregunta 1",
+        "preg2": "Pregunta 2",
+        "preg3": "Pregunta 3",
+        "comentario": "Comentario"
+    }
+    
     def __init__(self, img: np.ndarray):
         """
         Parametros:
@@ -9,7 +20,7 @@ class Formulario:
         """
         self.img = img
         
-    def escanear(self):
+    def _escanear(self):
         """
         Trabaja con la imágen y determina la estructura del formulario.
         Retorna un json con la siguiente estructura:
@@ -70,7 +81,7 @@ class Formulario:
             ---------------------------------------
             | Nombre i=1,j=0 | Juan Perez i=1,j=1 |
             ---------------------------------------
-            | Edad i=2,j=0   | 45 i=2,j=0         |
+            | Edad i=2,j=0   | 45 i=2,j=1         |
             ---------------------------------------
             """
             for j, columna in enumerate(columnas_x):
@@ -111,3 +122,153 @@ class Formulario:
                     if j == 1:
                         formulario["comentario"] = img_col
         return formulario
+    
+    def validate_form(self):
+        """
+        Esta función toma un diccionario con los recortes de cada campo de un formulario.
+        Usa las funciones existentes para evaluar los criterios especificados para cada campo.
+        Argumentos:
+            data: Un diccionario con los recortes de cada campo del formulario.
+        Salida:
+            Un diccionario con los resultados de la validación.
+        """
+        
+        data = self._escanear()
+        
+        criteria = {
+            'nombre': {'min_words': 2, 'max_words': float('inf'), 'min_chars': 1, 'max_chars': 25},
+            'edad': {'min_words': 1, 'max_words': 1, 'min_chars': 2, 'max_chars': 3},
+            'mail': {'min_words': 1, 'max_words': 1, 'min_chars': 1, 'max_chars': 25},
+            'legajo': {'min_words': 1, 'max_words': 1, 'min_chars': 8, 'max_chars': 8},
+            'preg1': {'min_words': 1, 'max_words': 1, 'min_chars': 1, 'max_chars': 1},
+            'preg2': {'min_words': 1, 'max_words': 1, 'min_chars': 1, 'max_chars': 1},
+            'preg3': {'min_words': 1, 'max_words': 1, 'min_chars': 1, 'max_chars': 1},
+            'comentario': {'min_words': 1, 'max_words': float('inf'), 'min_chars': 1, 'max_chars': 25},
+        }
+
+        for key in data.keys():
+            if key.startswith('preg'):
+                si = self.validate_text(data[key]['si'] == 0, **criteria[key])
+                no = self.validate_text(data[key]['no'] == 0, **criteria[key])
+                result = 'OK' if (si and not no) or (no and not si) else 'MAL'
+            else:
+                result = 'OK' if self.validate_text(data[key] == 0, **criteria[key]) else 'MAL'
+            print(self.mapeo[key], result)
+
+    def count_consecutive_values(self, arr):
+        """
+        Esta función toma una lista de valores booleanos y devuelve una lista de tuplas.
+        Cada tupla contiene un valor booleano y la cantidad de veces consecutivas que aparece en la lista.
+        Argumentos:
+            arr: Una lista de valores booleanos.
+        Salida:
+            Una lista de tuplas. Cada tupla contiene un valor booleano y la cantidad de veces consecutivas que aparece en la lista.
+        """
+
+        result = []
+        current_value = arr[0]
+        current_count = 1
+
+        for i in range(1, len(arr)):
+            if arr[i] == current_value:
+                current_count += 1
+            else:
+                result.append((current_value, current_count))
+                current_value = arr[i]
+                current_count = 1
+
+        result.append((current_value, current_count))
+        return result
+
+
+    def replace_consecutive_false(self, arr, threshold):
+        """
+        Esta función toma una lista de valores booleanos y un umbral.
+        Reemplaza los valores False consecutivos por debajo del umbral con True.
+        Argumentos:
+            arr: Una lista de valores booleanos.
+            threshold: Un umbral para determinar cuántos valores False consecutivos se deben reemplazar con True.
+        Salida:
+            Una lista de valores booleanos con los valores False consecutivos por debajo del umbral reemplazados por True.
+        """
+
+        arrm = self.count_consecutive_values(arr)
+        new_counts = []
+
+        first = arrm[0]
+        last = arrm[-1]
+
+        for i in range(1, len(arrm) - 1):
+            value, count = arrm[i]
+
+            if not value and count < threshold:
+                new_counts.append((True, count))
+            else:
+                new_counts.append(arrm[i])
+
+        result = [first] + new_counts + [last]
+        result_array = np.array([value for value, count in result for _ in range(count)])
+        return result_array
+
+    def count_paragraphs(self, arr):
+        """
+        Esta función toma una lista de valores booleanos y cuenta el número de 'párrafos'.
+        Un 'párrafo' se define como una secuencia de valores True consecutivos.
+        Argumentos:
+            arr: Una lista de valores booleanos.
+        Salida:
+            El número de 'párrafos' en la lista.
+        """
+
+        arrm = self.count_consecutive_values(arr)
+        paragraph_counts = [count for value, count in arrm if value]
+
+        return len(paragraph_counts)
+
+
+    def count_elements(self, img, axis, threshold):
+        """
+        Esta función toma una imagen, un eje y un umbral.
+        Cuenta el número de 'elementos' en la imagen a lo largo del eje especificado.
+        Un 'elemento' se define como una secuencia de píxeles blancos (True) consecutivos que son más largos que el umbral.
+        Argumentos:
+            img: Una imagen en escala de grises.
+            axis: El eje a lo largo del cual contar los 'elementos'.
+            threshold: Un umbral para determinar qué secuencias de píxeles blancos se consideran 'elementos'.
+        Salida:
+            El número de 'elementos' en la imagen a lo largo del eje especificado.
+        """
+
+        img_zeros = img == 0
+        img_sum = img_zeros.any(axis=axis)
+
+        modified = self.replace_consecutive_false(img_sum, threshold)
+        num_elements = self.count_paragraphs(modified)
+
+        return num_elements
+
+
+    def validate_text(self, img, min_chars=0, max_chars=float('inf'), min_words=0, max_words=float('inf'), axis=0, char_threshold=1, word_threshold=10):
+        """
+        Esta función toma una imagen unit8 y varios parámetros.
+        Verifica si el texto en la imagen cumple con los criterios especificados en términos de número de caracteres y palabras.
+        Argumentos:
+            img: Una imagen en escala de grises.
+            min_chars: El número mínimo de caracteres que debe tener el texto.
+            max_chars: El número máximo de caracteres que puede tener el texto.
+            min_words: El número mínimo de palabras que debe tener el texto.
+            max_words: El número máximo de palabras que puede tener el texto.
+            axis: El eje a lo largo del cual contar los caracteres y las palabras.
+            char_threshold: Un umbral para determinar qué secuencias de píxeles blancos se consideran 'caracteres'.
+            word_threshold: Un umbral para determinar qué secuencias de píxeles blancos se consideran 'palabras'.
+        Salida:
+            Verdadero si el texto en la imagen cumple con los criterios especificados, Falso en caso contrario.
+        """    
+
+        num_words = self.count_elements(img, axis, word_threshold)
+        num_chars = self.count_elements(img, axis, char_threshold) + num_words - 1 # Espacioes en blanco = num_words - 1
+
+        if min_chars <= num_chars <= max_chars and min_words <= num_words <= max_words:
+            return True
+        else:
+            return False
