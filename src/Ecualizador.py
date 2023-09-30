@@ -26,7 +26,7 @@ class Ecualizador:
             for j in range(mitad_h, imagen.shape[1] + mitad_h - 2):
                 seccion = img[i - mitad_w : mitad_w + i, j - mitad_h : mitad_h + j]
                 histograma = cv2.calcHist([seccion], [0], None, [256], [0, 256])
-                cdf = histograma.cumsum() #Calcular PDF (Función de Densidad de Probabilidad)
-                cdfn = cdf * 255 / float(cdf.max()) #Normalizar CDF
-                nueva_img[i - mitad_w : mitad_w + i, j - mitad_h : mitad_h + j] = cdfn[img[i, j]]
+                histograma_norm = histograma / img.shape[0] * img.shape[1]
+                cdf = histograma_norm.cumsum() #Calcular PDF (Función de Densidad de Probabilidad)
+                nueva_img[i - mitad_w : mitad_w + i, j - mitad_h : mitad_h + j] = cdf[img[i, j]]
         return nueva_img
