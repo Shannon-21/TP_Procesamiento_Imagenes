@@ -1,17 +1,28 @@
 import cv2
-import matplotlib.pyplot as plt
 from src.Ecualizador import Ecualizador
 from src.Formulario import Formulario
 
-img = cv2.imread("Imagen_con_detalles_escondidos.tif", cv2.IMREAD_GRAYSCALE)
 
+## Ejercicio 1 ##
 
+details = cv2.imread("Imagen_con_detalles_escondidos.tif", cv2.IMREAD_GRAYSCALE)
 e = Ecualizador()
-nueva_img = e.ecualizar(img, (11, 11))
-plt.figure()
-plt.imshow(nueva_img, cmap="gray")
-plt.show()
 
-imagen = cv2.imread("formulario_01.png", cv2.IMREAD_GRAYSCALE)
-f = Formulario(imagen)
-f.validate_form()
+kernels = [
+    (5, 5),
+    (11, 11),
+    (11, 21),
+    (21, 21),
+    (111, 111),
+]
+
+for kernel in kernels:
+    e.show_equalized(details, (kernel[0], kernel[1]))
+
+
+##-- Ejercicio 2 --##
+
+form = cv2.imread("formulario_02.png", cv2.IMREAD_GRAYSCALE)
+f = Formulario(form)
+
+cells  = f._escanear()
