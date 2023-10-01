@@ -26,3 +26,4 @@ form = cv2.imread("formulario_02.png", cv2.IMREAD_GRAYSCALE)
 f = Formulario(form)
 
 cells  = f._escanear()
+f.validate_form()
