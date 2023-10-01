@@ -5,7 +5,7 @@ from src.Formulario import Formulario
 
 ## Ejercicio 1 ##
 
-details = cv2.imread("Imagen_con_detalles_escondidos.tif", cv2.IMREAD_GRAYSCALE)
+details = cv2.imread("images/Imagen_con_detalles_escondidos.tif", cv2.IMREAD_GRAYSCALE)
 e = Ecualizador()
 
 kernels = [
@@ -22,7 +22,7 @@ for kernel in kernels:
 
 ##-- Ejercicio 2 --##
 
-form = cv2.imread("formulario_02.png", cv2.IMREAD_GRAYSCALE)
+form = cv2.imread("images/formulario_02.png", cv2.IMREAD_GRAYSCALE)
 f = Formulario(form)
 
 cells  = f._escanear()
