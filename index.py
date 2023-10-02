@@ -1,6 +1,7 @@
-import cv2
+import cv2, os, matplotlib.pyplot as plt
 from src.Ecualizador import Ecualizador
 from src.Formulario import Formulario
+
 
 
 ## Ejercicio 1 ##
@@ -20,10 +21,25 @@ for kernel in kernels:
     e.show_equalized(details, (kernel[0], kernel[1]))
 
 
+
 ##-- Ejercicio 2 --##
 
-form = cv2.imread("images/formulario_02.png", cv2.IMREAD_GRAYSCALE)
-f = Formulario(form)
+archivos = os.listdir("images")
+formularios = [archivo for archivo in archivos if archivo.startswith('formulario')]
 
-cells  = f._escanear()
-f.validate_form()
+for formulario in formularios:
+    ruta_formulario = os.path.join("images", formulario)
+    form = cv2.imread(ruta_formulario, cv2.IMREAD_GRAYSCALE)
+
+    print(f"{formulario}")
+
+    f = Formulario(form)
+    cells  = f._escanear()
+    f.validate_form()
+
+    plt.imshow(form, cmap="gray"), plt.show()
+    print("\n")
+
+    # para explicar funcionamiento
+    # f.show_segmentation(cells['nombre'], 10)
+    
