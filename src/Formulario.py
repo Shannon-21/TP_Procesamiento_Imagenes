@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 class Formulario:
     
     img: np.ndarray
@@ -272,3 +274,34 @@ class Formulario:
             return True
         else:
             return False
+        
+    def show_segmentation(self, arr, threshold, char_threshold=1, word_threshold=10):
+        """
+        Esta función toma una imagen y un umbral.
+        Dibuja líneas rojas para indicar la separación entre elementos (palabras, caracteres, dependiendo del umbral)
+        Argumentos:
+            arr: Una imagen en escala de grises.
+            threshold: Un umbral para determinar la separación entre elementos de interes.
+            char_threshold: Un umbral para determinar qué secuencias de píxeles blancos se consideran 'caracteres'.
+            word_threshold: Un umbral para determinar qué secuencias de píxeles blancos se consideran 'palabras'.
+        Salida:
+            Una visualización de la imagen con líneas rojas indicando la separación entre elementos.
+        """
+
+        img_pz = arr.any(axis=0)
+
+        modified = self.replace_consecutive_false(img_pz, threshold)
+
+        x = np.diff(modified)
+        indxs = np.argwhere(x)
+
+        ii = np.arange(0, len(indxs), 2)
+        indxs[ii] += 1
+
+        xx = np.arange(arr.shape[1])
+        yy = np.zeros(arr.shape[1])
+        yy[indxs] = (arr.shape[0] - 1)
+
+        plt.imshow(arr, cmap='gray')
+        plt.plot(xx, yy, c='r')
+        plt.show()
