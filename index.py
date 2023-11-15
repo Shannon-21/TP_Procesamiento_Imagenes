@@ -1,53 +1,145 @@
 import cv2
 import matplotlib.pyplot as plt
-import seaborn as sbn
 import numpy as np
 import math
 
-img_gray = cv2.imread("/home/simon/Documentos/FCEIA/PDI/TP1_Procesamiento_Imagenes/imagenes/ejercicio2/img01.png", cv2.IMREAD_GRAYSCALE)
-_, img_umbral = cv2.threshold(img_gray, 160, 255, cv2.THRESH_BINARY)
-plt.imshow(img_umbral, cmap="gray")
-plt.show(block=True)
+imagenes = [
+    {
+        #img 1
+        "threshold": 160,
+        "area": [80, 30],
+        "rel_aspect": [1.2, 2.5],
+        "dist": 43
+    },
+    {
+        #img 2
+        "threshold": 100,
+        "area": [80, 30],
+        "rel_aspect": [1.2, 2.5],
+        "dist": 43
+    },
+    {
+        #img 3 ######################################## REVISAR!!!!!! #########################
+        "threshold": 120,
+        "area": [180, 5],
+        "rel_aspect": [1, 5],
+        "dist": 43
+    },
+    {
+        #img 4
+        "threshold": 160,
+        "area": [80, 30],
+        "rel_aspect": [1.2, 2.5],
+        "dist": 43
+    },
+    {
+        #img 5
+        "threshold": 160,
+        "area": [80, 30],
+        "rel_aspect": [1.2, 2.8],
+        "dist": 30
+    },
+    {
+        #img 6
+        "threshold": 110,
+        "area": [100, 30],
+        "rel_aspect": [1.2, 2.8],
+        "dist": 30
+    },
+    {
+        #img 7
+        "threshold": 110,
+        "area": [100, 10],
+        "rel_aspect": [1.2, 2.8],
+        "dist": 30
+    },
+    {
+        #img 8
+        "threshold": 140,
+        "area": [100, 10],
+        "rel_aspect": [1.2, 2.8],
+        "dist": 30
+    },
+    {
+        #img 9
+        "threshold": 100,
+        "area": [100, 15],
+        "rel_aspect": [1.2, 2.8],
+        "dist": 30
+    },
+    {
+        #img 10
+        "threshold": 130,
+        "area": [100, 30],
+        "rel_aspect": [1.2, 2.5],
+        "dist": 30
+    },
+    {
+        #img 11
+        "threshold": 133,
+        "area": [100, 30],
+        "rel_aspect": [1.2, 2.5],
+        "dist": 30
+    },
+    {
+        #img 12
+        "threshold": 100,
+        "area": [100, 15],
+        "rel_aspect": [1.8, 2.5],
+        "dist": 30
+    },
+]
 
-num_labels, img_labels, stats, centroids = cv2.connectedComponentsWithStats(img_umbral)
+def obtener_letras(params):
+    for i, param in enumerate(params):
+        img_num = i + 1
+        pthreshold = param["threshold"]
+        parea = param["area"]
+        prel_aspect = param["rel_aspect"]
+        pdist = param["dist"]
 
-plt.imshow(img_labels, cmap="gray")
-plt.show(block=True)
+        img_gray = cv2.imread(f"imagenes\ejercicio2\img{str(img_num).rjust(2, '0')}.png", cv2.IMREAD_GRAYSCALE)
+        # img_gray = cv2.imread(f"imagenes\ejercicio2\img12.png", cv2.IMREAD_GRAYSCALE)
+        _, img_umbral = cv2.threshold(img_gray, pthreshold, 255, cv2.THRESH_BINARY)
 
-img_zeros = np.zeros_like(img_labels)
+        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        # img_umbral = cv2.dilate(img_umbral, kernel, iterations=1)
+        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        # img_umbral= cv2.erode(img_umbral, kernel, iterations=1)
 
-centroides_validos = []
+        plt.figure()
+        plt.imshow(img_umbral, cmap="gray")
+        plt.show(block=False)
 
-for i in range(1, len(stats)):
-    izq, arriba, ancho, alto, area = stats[i]
-    rel_aspecto = alto / ancho
-    if area < 80 and area > 30 and rel_aspecto > 1.2 and rel_aspecto < 2.5:
-        centroides_validos.append((centroids[i], i))
-        img_zeros[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
+        num_labels, img_labels, stats, centroids = cv2.connectedComponentsWithStats(img_umbral, connectivity=8)
+        img_zeros = np.zeros_like(img_labels)
 
-# for i in range(1, len(stats)):
-#     izq, arriba, ancho, alto, area = stats[i]
-#     rel_aspecto = alto / ancho
-#     if area < 80 and area > 30 and rel_aspecto > 1.2 and rel_aspecto < 2.5:
-#         ci = centroids[i]
-#         for j in range(1 + i, len(centroids)):
-#             cj = centroids[j]
-#             dist = math.sqrt((ci[0] - cj[0]) ** 2 + (cj[0] + cj[1]) ** 2)
-#             print("DIST", dist)
-#         # centroides_validos.append(centroids[i])
-#         img_zeros[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
+        centroides_validos = []
 
-img_zeros2 = np.zeros_like(img_labels)
-for i in range(0, len(centroides_validos)):
-    ci, ii = centroides_validos[i]
-    for j in range(0, len(centroides_validos)):
-        cj, ij = centroides_validos[j]
-        dist = math.sqrt((ci[0] - cj[0]) ** 2 + (ci[1] - cj[1]) ** 2)
-        print(dist)
-        if dist < 46:
-            izq, arriba, ancho, alto, area = stats[ii]
-            img_zeros2[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
+        for i in range(1, len(stats)):
+            izq, arriba, ancho, alto, area = stats[i]
+            rel_aspecto = alto / ancho
+            if area < parea[0] and area > parea[1] and rel_aspecto > prel_aspect[0] and rel_aspecto < prel_aspect[1]:
+                centroides_validos.append((centroids[i], i))
+                img_zeros[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
 
-plt.figure()
-plt.imshow(img_zeros2, cmap="gray")
-plt.show()
+        plt.figure()
+        plt.imshow(img_zeros, cmap="gray")
+        plt.show(block=False)
+
+        img_zeros2 = np.zeros_like(img_labels)
+        for i in range(0, len(centroides_validos)):
+            ci, ii = centroides_validos[i]
+            centroides_validos_copia = [tupla for j, tupla in enumerate(centroides_validos) if tupla[1] != ii]
+            for j in range(0, len(centroides_validos_copia)):
+                cj, ij = centroides_validos_copia[j]
+                dist = math.sqrt((ci[0] - cj[0]) ** 2 + (ci[1] - cj[1]) ** 2)
+                izq, arriba, ancho, alto, area = stats[ii]
+                if dist < pdist:
+                    img_zeros2[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
+
+        plt.figure()
+        plt.imshow(img_zeros2, cmap="gray")
+        plt.show(block=True)
+
+obtener_letras(imagenes)
