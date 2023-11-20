@@ -95,6 +95,82 @@ class Patente:
             },
         ]
 
+        self.formas = [
+            {
+                #img 1
+                "threshold": 150,
+                "area": [800, 200],
+                "rel_aspect": [0.1, 0.5],
+            },
+            {
+                #img 2
+                "threshold": 100,
+                "area": [1000, 500],
+                "rel_aspect": [0.2, 2.0],
+            },
+            {
+                #img 3 ############## anda mal
+                "threshold": 100,
+                "area": [10000, 100],
+                "rel_aspect": [1, 5],
+            },
+            {
+                #img 4
+                "threshold": 150,
+                "area": [900, 800],
+                "rel_aspect": [0.5, 1.5],
+            },
+            {
+                #img 5
+                "threshold": 160,
+                "area": [10000, 2000],
+                "rel_aspect": [0.1, 1.5],
+            },
+            {
+                #img 6
+                "threshold": 100,
+                "area": [2000, 1000],
+                "rel_aspect": [0.1, 2.0],
+            },
+            {
+                #img 7
+                "threshold": 100,
+                "area": [1500, 500],
+                "rel_aspect": [0.2, 0.5],
+            },
+            {
+                #img 8
+                "threshold": 140,
+                "area": [1500, 500],
+                "rel_aspect": [0.2, 1.0],
+            },
+            {
+                #img 9
+                "threshold": 100,
+                "area": [1200, 500],
+                "rel_aspect": [0.2, 0.5],
+            },
+            {
+                #img 10
+                "threshold": 110,
+                "area": [2000, 1000],
+                "rel_aspect": [0.3, 1.5],
+            },
+            {
+                #img 11
+                "threshold": 133,
+                "area": [2000, 500],
+                "rel_aspect": [0.3, 0.5],
+            },
+            {
+                #img 12 ############# anda mal
+                "threshold": 100,
+                "area": [100, 15],
+                "rel_aspect": [1.8, 2.5],
+                "dist": 30
+            },
+        ]
+
     def obtener_letras(self):
         for i, param in enumerate(self.imagenes):
             img_num = i + 1
@@ -149,3 +225,41 @@ class Patente:
 
             # Mostrar imagen
             plt.show(block=True)
+
+    def obtener_formas(self):
+        for i, param in enumerate(self.formas):
+            img_num = i + 1
+            pthreshold = param["threshold"]
+            parea = param["area"]
+            prel_aspect = param["rel_aspect"]
+
+            img_gray = cv2.imread(path.join("imagenes", "ejercicio2", f"img{str(img_num).rjust(2, '0')}.png"), cv2.IMREAD_GRAYSCALE)
+            _, img_umbral = cv2.threshold(img_gray, pthreshold, 255, cv2.THRESH_BINARY)
+
+            fig, axes = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
+            axes[0].imshow(img_umbral, cmap="gray")
+            axes[0].set_title('Imagen umbralada')
+
+            # obtencion de componentes conenctados
+            num_labels, img_labels, stats, centroids = cv2.connectedComponentsWithStats(img_umbral, connectivity=4)
+
+            # filtro de componentes
+            img_zeros = np.zeros_like(img_labels)
+
+            for i in range(1, len(stats)):
+                izq, arriba, ancho, alto, area = stats[i]
+                rel_aspecto = alto / ancho
+                # los componentes deben pasar filtro de area y relacion de aspecto
+                if (area < parea[0]) and (area > parea[1]) and (rel_aspecto > prel_aspect[0]) and (rel_aspecto < prel_aspect[1]):
+                    img_zeros[arriba:arriba + alto, izq:izq + ancho] = img_labels[arriba:arriba + alto, izq:izq + ancho]
+
+            axes[1].imshow(img_zeros, cmap="gray")
+            axes[1].set_title('Filtro de area')
+
+            fig.suptitle(f"Imagen {img_num}")
+            # Maximizar la ventana al abrir
+            mng = plt.get_current_fig_manager()
+            mng.window.state('zoomed')
+
+            plt.show(block=True)
+            
