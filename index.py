@@ -7,3 +7,4 @@ objetos.detectar()
 
 patente = Patente()
 patente.obtener_letras()
+patente.obtener_formas()
