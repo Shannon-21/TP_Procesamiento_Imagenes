@@ -26,4 +26,17 @@ El mismo consta de dos ejercicios:
 
 Para leer mas sobre el proyecto puede acceder a la documentacion: https://docs.google.com/document/d/15uaVN_WLnk7Bqamr9LyvqLQu-mleGBzEVmrUKeUynJk/edit?usp=sharing
 
+---
+
 Para ejecutar estos programas, debe clonar el repositorio, y asegurarse de instalar en su entorno la libreria `opencv-python` mediante pip.
+
+El archivo `index.py` es quien reune todo el codigo del proyecto. Se han organizado la resolucion de cada ejercicio en clases de python. Por lo que sera necesario importar estas clases estando ubicado en la ruta adecuada como:
+
+```
+from scr.Objetos import Objetos
+from scr.Patentes import Patentes
+```
+
+La clase Objetos tiene una unica funcion ejecutada en `index.py` que mostrara progresivamente en distintos graficos de matplotlib el avanze del analisis.
+La clase Patente tiene dos metrodos, el primero de reconocer caracteres, que al ser llamada muestra una a una las images de los autos en tres parte: Umbralado, Filtro por area y relacion de aspecto, y filtro por cercania.
+La segunda funcion cumple un rol similar, pero solo mostrando la imagen umbralada y el filtro por area y relacion de aspecto.
