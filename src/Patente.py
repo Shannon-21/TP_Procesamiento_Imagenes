@@ -102,7 +102,6 @@ class Patente:
             prel_aspect = param["rel_aspect"]
             pdist = param["dist"]
 
-            # img_gray = cv2.imread(f"imagenes\ejercicio2\img{str(img_num).rjust(2, '0')}.png", cv2.IMREAD_GRAYSCALE)
             img_gray = cv2.imread(path.join("imagenes", "ejercicio2", f"img{str(img_num).rjust(2, '0')}.png"), cv2.IMREAD_GRAYSCALE)
             _, img_umbral = cv2.threshold(img_gray, pthreshold, 255, cv2.THRESH_BINARY)
 
