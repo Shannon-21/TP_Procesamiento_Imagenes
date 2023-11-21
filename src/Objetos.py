@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 
 
 class Objetos:
-    def __init__(self) -> None:
-        self.IMG = "imagenes/ejercicio1/monedas.jpg"
+    def __init__(self,
+                 src_img = "imagenes/ejercicio1/monedas.jpg"
+                ) -> None:
+        self.IMG = src_img
 
     def detectar(self):
         img = cv2.imread(self.IMG, cv2.IMREAD_COLOR)
