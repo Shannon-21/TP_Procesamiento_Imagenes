@@ -219,10 +219,6 @@ class Patente:
 
             fig.suptitle(f"Imagen {img_num}")
 
-            # Maximizar la ventana al abrir
-            mng = plt.get_current_fig_manager()
-            mng.window.state('zoomed')
-
             # Mostrar imagen
             plt.show(block=True)
 
@@ -257,9 +253,6 @@ class Patente:
             axes[1].set_title('Filtro de area')
 
             fig.suptitle(f"Imagen {img_num}")
-            # Maximizar la ventana al abrir
-            mng = plt.get_current_fig_manager()
-            mng.window.state('zoomed')
 
             plt.show(block=True)
             
