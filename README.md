@@ -4,7 +4,7 @@
 
 ### Procesamiento de Imagenes 1
 
-### **Morfologia, Color y Restauracion**
+### **Trabajo Práctico 3**
 
 ---
 
