@@ -15,9 +15,9 @@ class Detector:
     Arreglo de videos
     """
     
-    FPS = 18
+    FPD = 18
     """
-    Cantidad de fotogramas que deben pasar para medir la distancia entre los dados
+    (Fotogramas Por Distancia) Cantidad de fotogramas que deben pasar para medir la distancia entre los dados
     """
     
     ESCALADO_VISUAL = 3
@@ -73,7 +73,7 @@ class Detector:
                         if d.es_misma_posicion(pd):
                             org_frame = d.dibujar(org_frame)
                 
-                if self.cont_frame == self.FPS:
+                if self.cont_frame == self.FPD:
                     prev_dados = dados
                     self.cont_frame = 0
                 self.cont_frame += 1
