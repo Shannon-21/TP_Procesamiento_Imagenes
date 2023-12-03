@@ -5,14 +5,14 @@ import os
 
 class Detector:
     
-    IMAGENES = [
+    VIDEOS = [
         "src/videos/tirada_1.mp4",
         "src/videos/tirada_2.mp4",
         "src/videos/tirada_3.mp4",
         "src/videos/tirada_4.mp4",
     ]
     """
-    Arreglo de imágenes
+    Arreglo de videos
     """
     
     FPS = 18
@@ -32,7 +32,7 @@ class Detector:
         """
         Itera sobre cada imágen y detecta los dados con sus números
         """
-        for i, v in enumerate(self.IMAGENES):
+        for i, v in enumerate(self.VIDEOS):
             prev_dados : List[Dado] = []
             cap = cv2.VideoCapture(v)
             if not cap.isOpened():
