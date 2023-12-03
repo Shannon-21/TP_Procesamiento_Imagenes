@@ -1,6 +1,7 @@
 import cv2
 from .Dado import Dado
 from typing import List
+import os
 
 class Detector:
     
@@ -36,7 +37,14 @@ class Detector:
             cap = cv2.VideoCapture(v)
             if not cap.isOpened():
                 raise Exception("Error al abrir video")
-
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            
+            if not os.path.exists("out"):
+                os.mkdir("out")
+            
+            video_out = cv2.VideoWriter(f"out/Video_{i + 1}.mp4", cv2.VideoWriter.fourcc(*"mp4v"), fps, (width // self.ESCALADO_VISUAL, height // self.ESCALADO_VISUAL))
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
@@ -70,13 +78,13 @@ class Detector:
                     self.cont_frame = 0
                 self.cont_frame += 1
                 
-                resized = cv2.resize(org_frame, (org_frame.shape[1] // self.ESCALADO_VISUAL, org_frame.shape[0] // self.ESCALADO_VISUAL))
-                
-                cv2.imshow(f'Video {i + 1}',resized)
+                resized = cv2.resize(org_frame, (width // self.ESCALADO_VISUAL, height // self.ESCALADO_VISUAL))
+                video_out.write(resized)
                 
                 if cv2.waitKey(81) & 0xFF == ord('q'):
                     break
+        video_out.release()
     
     def __es_dado(self, area: float, w: float, h: float):
         aspect_ratio = h / w
-        return area > 3500 and area < 5500 and aspect_ratio > 0.7 and aspect_ratio < 1.2
+        return area > 3700 and area < 5500 and aspect_ratio > 0.7 and aspect_ratio < 1.2
