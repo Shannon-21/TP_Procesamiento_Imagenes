@@ -30,8 +30,8 @@ Para leer mas sobre el proyecto puede acceder a la documentacion: https://docs.g
 
 Para ejecutar estos programas, debe clonar el repositorio, y asegurarse de instalar en su entorno la libreria `opencv-python` mediante pip.
 
-El archivo `index.py` es quien reune todo el codigo del proyecto. Se han organizado la resolucion de cada ejercicio en clases de python. Por lo que sera necesario importar estas clases estando ubicado en la ruta adecuada como:
+El archivo `index.py` es quien reune todo el codigo del proyecto.
 
-El proyecto consta de dos clases:
+La solución consta de dos clases:
 * La clase Detector que se encarga de detectar los dados
 * La clase Dado que representa un dado en el video y detecta los números de su cara
