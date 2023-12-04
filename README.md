@@ -24,7 +24,7 @@ El mismo consta de dos ejercicios:
 
 * Identificar los números de las caras
 
-Para leer mas sobre el proyecto puede acceder a la documentacion: https://docs.google.com/document/d/15uaVN_WLnk7Bqamr9LyvqLQu-mleGBzEVmrUKeUynJk/edit?usp=sharing
+Para leer mas sobre el proyecto puede acceder a la documentacion: [https://docs.google.com/document/d/15uaVN_WLnk7Bqamr9LyvqLQu-mleGBzEVmrUKeUynJk/edit?usp=sharing](https://drive.google.com/file/d/1zZCQ9TGqPLYZYRoskNp3ulZ7Do3mAb2L/view?usp=sharing)
 
 ---
 
