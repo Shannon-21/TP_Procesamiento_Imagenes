@@ -28,7 +28,26 @@ Para leer mas sobre el proyecto puede acceder a la documentacion: https://docs.g
 
 ---
 
-Para ejecutar estos programas, debe clonar el repositorio, y asegurarse de instalar en su entorno la libreria `opencv-python` mediante pip.
+Para ejecutar estos programas, se debe clonar el repositorio dentro de su local y posteriormente instalar las librerías necesarias para su ejecución. 
+
+Para ello, se recomienda crear un entorno virtual con `python` de la siguiente forma:
+
+```bash
+python -m venv venv
+```
+
+Luego activar el entorno virtual con:
+
+```bash
+source venv/bin/activate
+```
+_(En caso de utilizar Windows, el comando anterior cambia a `venv\Scripts\activate.bat`)_
+
+Luego instalar las librerías mediante `pip`:
+
+```bash
+pip install -r requirements.txt
+```
 
 El archivo `index.py` es quien reune todo el codigo del proyecto.
 

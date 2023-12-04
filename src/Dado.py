@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import math
 
+
 class Dado:
     def __init__(self, img: np.ndarray, x: float, y: float, width: float, height: float) -> None:
         self.img = img
@@ -9,7 +10,7 @@ class Dado:
         self.y = y
         self.width = width
         self.height = height
-    
+
     def contar_nro(self):
         """
         Cuenta los números de la cara de un dado
@@ -26,8 +27,8 @@ class Dado:
             if darea > 60 and darea < 160 and aspect_ratio > 0.6 and aspect_ratio < 1.2:
                 cont += 1
         return cont
-    
-    def es_misma_posicion(self, dado : "Dado"):
+
+    def es_misma_posicion(self, dado: "Dado"):
         """
         Determina si el dado está en la misma posición calculando la distancia euclidea
         """
@@ -42,5 +43,7 @@ class Dado:
         """
         Dibuja un rectángulo con el nro de la cara en la imagen dada
         """
-        img2 = cv2.rectangle(img, (self.x, self.y), (self.x + self.width, self.y + self.height), (255, 255, 0), thickness=10)
-        return cv2.putText(img2, str(self.contar_nro()), (self.x, self.y - 20), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 0), 2)
+        img2 = cv2.rectangle(img, (self.x, self.y), (self.x + self.width, self.y + self.height), (255, 255, 0),
+                             thickness=10)
+        return cv2.putText(img2, str(self.contar_nro()), (self.x, self.y - 20), cv2.FONT_HERSHEY_SIMPLEX, 1.2,
+                           (255, 255, 0), 2)
