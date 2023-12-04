@@ -16,7 +16,7 @@ class Detector:
     Arreglo de videos
     """
 
-    FPD = 18
+    FPD = 19
     """
     (Fotogramas Por Distancia) Cantidad de fotogramas que deben pasar para medir la distancia entre los dados
     """
