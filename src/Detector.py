@@ -81,7 +81,7 @@ class Detector:
                 # Para visualización de paso intermedio en el frame 80
                 if flag_visualizacion == 80:
                     fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
-                    axs[0].imshow(frame)
+                    axs[0].imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
                     axs[0].set_title('Filtro de canal rojo')
                     axs[1].imshow(frame_binario, cmap='gray')
                     axs[1].set_title('Imagen binarizada')
@@ -90,7 +90,7 @@ class Detector:
                 # para almacenar los dados en cada frame
                 dados: List[Dado] = []
 
-                # de cada componente obtenner sus caracteristicas
+                # de cada componente obtener sus caracteristicas
                 for j in range(1, n_labels):
                     x1 = stats[j, cv2.CC_STAT_LEFT]
                     y1 = stats[j, cv2.CC_STAT_TOP]
@@ -121,7 +121,7 @@ class Detector:
 
                 # Para visualización de paso intermedio en el frame 80
                 if flag_visualizacion == 80:
-                    plt.imshow(resized)
+                    plt.imshow(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
                     plt.title('Dados detectados')
                     plt.show()
 
